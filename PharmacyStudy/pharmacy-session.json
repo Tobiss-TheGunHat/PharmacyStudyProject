@@ -1,0 +1,50 @@
+{
+  "team": "24-03-ИСиП-[Номер]",
+  "sessions": [
+    {
+      "phase": "pre-release-control",
+      "build": "1.4.0",
+      "api": "v1",
+      "clients": { "store": "v1", "pickup": "v1", "support": "v1" },
+      "orders": [
+        { "id": "ORD-001", "code": "DEMO-001", "total_rub": 270.00, "status": "issued" }
+      ]
+    },
+    {
+      "phase": "candidate-1.5.0-rc",
+      "build": "1.5.0-rc",
+      "api": "v2",
+      "clients": { "store": "v2", "pickup": "v1", "support": "v1" },
+      "adapter": true,
+      "tests": [
+        { "id": "TC-07", "result": "failed", "defect": "DEF-01" },
+        { "id": "TC-11", "result": "failed", "defect": "DEF-02" }
+      ],
+      "incidents": [
+        { "id": "INC-1", "orders_created": 1, "idempotency": true },
+        { "id": "INC-2", "orders_created": 1, "double_charge": false }
+      ]
+    },
+    {
+      "phase": "release-1.5.1",
+      "build": "1.5.1",
+      "decision": "approve_with_limits",
+      "post_release_check": {
+        "control_order_DEMO-001": "found",
+        "new_order_DEMO-002": "created"
+      }
+    },
+    {
+      "phase": "rollback-compare",
+      "config_before": "1.5.1",
+      "config_after": "1.4.0",
+      "orders_preserved": true
+    },
+    {
+      "phase": "snapshot-restore",
+      "snapshot_time": "202X-03-24T00:15:00Z",
+      "data_loss_window_minutes": 45,
+      "orders_after_snapshot_lost": 2
+    }
+  ]
+}
